@@ -1,20 +1,25 @@
 
-class Student():
-    def __init__(self,rollno,name,subject,marks):
-        self.rollno=rollno
-        self.name=name
-        self.subject=subject
-        self.marks=marks
+from abc import ABC,abstractmethod
 
-    def displayData(self):
-        print(f"The name and subject is {self.name} {self.subject}")
-    
-    def __str__(self):
-        return f"The name and subject is {self.name} {self.subject}"
-    
+class RBI(ABC):
+    @abstractmethod
+    def deposit(self):
+        pass
+        
+    def withdraw(self):
+        print("withdraw")
+    def checkBalance(self):
+        print("checking Balance")
 
-sayna= Student("999","sanya","PHY","88")
-atul= Student("997","atul","CHEM","89")
 
-print(sayna)
-print(atul.displayData())
+class SBI(RBI):
+    def openFD(self):
+        print("opening FD in SBI")
+    def deposit(self):
+        print("amount is deposited in SBI")
+
+
+sbi= SBI()
+
+sbi.deposit()
+sbi.openFD()
