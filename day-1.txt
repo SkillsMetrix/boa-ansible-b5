@@ -1,17 +1,20 @@
 
-class User:
-    username='admin'
-    email=''
-    city=''
+class Student():
+    def __init__(self,rollno,name,subject,marks):
+        self.rollno=rollno
+        self.name=name
+        self.subject=subject
+        self.marks=marks
 
-    def __init__(self,email,city):
-       self.email=email
-       self.city=city
-
+    def displayData(self):
+        print(f"The name and subject is {self.name} {self.subject}")
+    
     def __str__(self):
-        return f" {self.username} {self.email} {self.city}"
+        return f"The name and subject is {self.name} {self.subject}"
+    
 
-user= User('user@mail.com','pune')
+sayna= Student("999","sanya","PHY","88")
+atul= Student("997","atul","CHEM","89")
 
-#print(f"Username is {user.username} {user.email} {user.city}")
-print(f"UserDetails {user}")
+print(sayna)
+print(atul.displayData())
