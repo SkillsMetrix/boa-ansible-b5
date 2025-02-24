@@ -1,20 +1,17 @@
-#initializing an empty array
-use_numbers=[]
 
-#ask user to add the data
+class User:
+    username='admin'
+    email=''
+    city=''
 
-n= int(input('How many numbers you wana add: '))
+    def __init__(self,email,city):
+       self.email=email
+       self.city=city
 
-# take this input into the array
-for i in range(n):
-    num= int(input (f"Enter Numbers {i+1}" ))
-    use_numbers.append(num)
-print(use_numbers)
+    def __str__(self):
+        return f" {self.username} {self.email} {self.city}"
 
-# loop through the array
+user= User('user@mail.com','pune')
 
-for num in use_numbers:
-    if num%2==0:
-        print(f"{num} is even number")
-    else:
-         print(f"{num} is odd number")
+#print(f"Username is {user.username} {user.email} {user.city}")
+print(f"UserDetails {user}")
