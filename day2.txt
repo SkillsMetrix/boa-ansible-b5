@@ -48,7 +48,7 @@ def deleteUser(id:int):
 
 # update the data from server
 @router.put("/updateuser/{id}")
-def deleteUser(id:int,payload: userschema.Users):
+def updateUser(id:int,payload: userschema.Users):
     serachResult= searchUser(id)
     if serachResult== None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching ID')
