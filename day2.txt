@@ -1,62 +1,18 @@
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-from fastapi import APIRouter,HTTPException,status
-from . import userschema
-from random import randrange
+SQLALCHEMY_DATABASE_URL = "sqlite:///./mytest.db"
+ 
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-router= APIRouter()
-
-# dummy user data
-
-usersData=[{'uname':'Sam','email':'sam@mail.com','city':'NY','id':101}]
-
-# search common logic
-
-def searchUser(id):
-    for index,data in enumerate(usersData):
-        if(data['id'] == id):
-            return index
-# load the data from server
-@router.get('/loadusers')
-def welcomeUser():
-    return {'message':usersData}
-
-# add the data from server
-@router.post('/adduser')
-def adduser(payload: userschema.Users):
-    userdata= payload.model_dump()
-    userdata['id']=randrange(0,1000)
-    usersData.append(userdata)
-    return {'message':userdata}
-
-# search the data from server
-@router.get("/finduser/{id}")
-def findUser(id:int):
-    serachResult= searchUser(id)
-    if serachResult== None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching ID')
-    return{"result":serachResult}
-
-
-# remove the data from server
-@router.delete("/deleteuser/{id}")
-def deleteUser(id:int):
-    serachResult= searchUser(id)
-    if serachResult== None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching ID')
-    usersData.pop(serachResult)
-    return{"result":'user deleted'}
-
-# update the data from server
-@router.put("/updateuser/{id}")
-def updateUser(id:int,payload: userschema.Users):
-    serachResult= searchUser(id)
-    if serachResult== None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching ID')
-    
-    myuser=payload.model_dump()
-    myuser['id']=id
-    usersData[serachResult]=myuser
-
-    return{"result":'user updated'}
-
-
+Base = declarative_base()
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
