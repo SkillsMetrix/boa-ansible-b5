@@ -16,3 +16,37 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+
+
+----
+
+
+from sqlalchemy import Column,String
+
+from .database import Base
+
+class Student(Base):
+    __tablename__="STUDENT"
+
+    uname=Column(String,primary_key=True)
+    email=Column(String)
+    city=Column(String)
+
+
+--------
+
+
+
+from fastapi import FastAPI
+from . approuting import router
+from .database import engine
+from . import models
+
+models.Base.metadata.create_all(bind=engine)
+  
+app = FastAPI()
+
+app.include_router(router)
+
