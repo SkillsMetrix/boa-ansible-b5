@@ -1,28 +1,24 @@
 
-from fastapi import FastAPI
+from fastapi import APIRouter
 from . import userschema
 from random import randrange
 
-app = FastAPI()
+router= APIRouter()
 
 # dummy user data
 
 usersData=[{'uname':'Sam','email':'sam@mail.com','city':'NY','id':101}]
 
-@app.get('/loadusers')
+@router.get('/loadusers')
 def welcomeUser():
     return {'message':usersData}
 
-@app.post('/adduser')
+@router.post('/adduser')
 def adduser(payload: userschema.Users):
-    userdata= payload.dict()
+    userdata= payload.model_dump()
     userdata['id']=randrange(0,1000)
     usersData.append(userdata)
     return {'message':userdata}
-
-@app.get('/register')
-def welcomeregister():
-    return {'message':'welcome to Register API'}
 
 
 
@@ -35,3 +31,14 @@ class Users(BaseModel):
     uname: str
     email: str
     city: str
+-----
+
+
+
+from fastapi import FastAPI
+from . approuting import router
+  
+app = FastAPI()
+
+app.include_router(router)
+
