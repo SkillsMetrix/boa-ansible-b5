@@ -1,0 +1,17 @@
+
+from fastapi import FastAPI
+
+
+app = FastAPI()
+
+@app.get('/welcome')
+def welcomeUser():
+    return {'message':'welcome to REST API'}
+
+@app.get('/login')
+def welcomeLogin():
+    return {'loginMessage':'welcome to Login'}
+
+@app.get('/register')
+def welcomeregister():
+    return {'message':'welcome to Register API'}
