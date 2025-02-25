@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter
+from fastapi import APIRouter,HTTPException,status
 from . import userschema
 from random import randrange
 
@@ -8,6 +8,13 @@ router= APIRouter()
 # dummy user data
 
 usersData=[{'uname':'Sam','email':'sam@mail.com','city':'NY','id':101}]
+
+# search common logic
+
+def searchUser(id):
+    for index,data in enumerate(usersData):
+        if(data['id'] == id):
+            return data
 
 @router.get('/loadusers')
 def welcomeUser():
@@ -20,25 +27,11 @@ def adduser(payload: userschema.Users):
     usersData.append(userdata)
     return {'message':userdata}
 
+@router.get("/finduser/{id}")
+def findUser(id:int):
+    serachResult= searchUser(id)
+    if serachResult== None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching ID')
+    return{"result":serachResult}
 
-
-------
-
-
-from pydantic import BaseModel
-
-class Users(BaseModel):
-    uname: str
-    email: str
-    city: str
------
-
-
-
-from fastapi import FastAPI
-from . approuting import router
-  
-app = FastAPI()
-
-app.include_router(router)
 
