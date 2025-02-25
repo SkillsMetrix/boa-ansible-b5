@@ -24,8 +24,16 @@ def searchUser(id):
             return index
 # load the data from server
 @router.get('/users/loadusers')
-def welcomeUser():
-    return {'message':usersData}
+def welcomeUser(db:Session=Depends(get_db)):
+    posts=db.query(models.Student).all()
+    return posts
+
+# search the data from server
+@router.get("/users/finduser/{name}")
+def findUser(name,db:Session=Depends(get_db)):
+    post= db.query(models.Student).filter(models.Student.uname==name ).first()
+    return {'data':post}
+
 
 # add the data from server
 @router.post('/users/adduser')
@@ -33,29 +41,26 @@ def adduser(payload: userschema.UsersCreate,db:Session=Depends(get_db)):
 
     userdata= models.Student(**payload.dict())
     print (userdata)
-    """ db.add(userdata)
+    db.add(userdata)
     db.commit()
-    db.refresh(userdata) """
+   
     return userdata
     
 
-# search the data from server
-@router.get("/users/finduser/{id}")
-def findUser(id:int):
-    serachResult= searchUser(id)
-    if serachResult== None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching ID')
-    return{"result":serachResult}
 
 
 # remove the data from server
-@router.delete("/users/deleteuser/{id}")
-def deleteUser(id:int):
-    serachResult= searchUser(id)
-    if serachResult== None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching ID')
-    usersData.pop(serachResult)
-    return{"result":'user deleted'}
+@router.delete("/users/deleteuser/{name}")
+def deleteUser(name:str,db:Session=Depends(get_db)):
+     post= db.query(models.Student).filter(models.Student.uname==name )
+     if post.first() == None:
+         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching name')
+     post.delete(synchronize_session=False)
+     db.commit()
+     return {'message':'user deleted'}
+
+         
+    
 
 # update the data from server
 @router.put("/users/updateuser/{id}")
