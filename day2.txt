@@ -1,17 +1,37 @@
 
 from fastapi import FastAPI
-
+from . import userschema
+from random import randrange
 
 app = FastAPI()
 
-@app.get('/welcome')
-def welcomeUser():
-    return {'message':'welcome to REST API'}
+# dummy user data
 
-@app.get('/login')
-def welcomeLogin():
-    return {'loginMessage':'welcome to Login'}
+usersData=[{'uname':'Sam','email':'sam@mail.com','city':'NY','id':101}]
+
+@app.get('/loadusers')
+def welcomeUser():
+    return {'message':usersData}
+
+@app.post('/adduser')
+def adduser(payload: userschema.Users):
+    userdata= payload.dict()
+    userdata['id']=randrange(0,1000)
+    usersData.append(userdata)
+    return {'message':userdata}
 
 @app.get('/register')
 def welcomeregister():
     return {'message':'welcome to Register API'}
+
+
+
+------
+
+
+from pydantic import BaseModel
+
+class Users(BaseModel):
+    uname: str
+    email: str
+    city: str
