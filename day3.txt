@@ -1,2 +1,8 @@
-chmod 400 "boa-ansible.pem"
-ssh-copy-id -f "-o IdentityFile boa-ansible.pem" ubuntu@54.214.36.91
+- hosts: web
+  become: true
+  tasks:
+    - name: Create a directory on remote machine
+      file:
+        path: ./boa-dir
+        state: directory
+
