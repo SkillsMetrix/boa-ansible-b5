@@ -1,0 +1,79 @@
+
+from fastapi import APIRouter,HTTPException,status,Depends
+from . import userschema
+from sqlalchemy.orm import Session
+from random import randrange
+from .database import engine,get_db
+from . import models
+router= APIRouter(tags=["USER Application"])
+
+# dummy user data
+
+usersData=[{'uname':'Sam','email':'sam@mail.com','city':'NY','id':101}]
+
+# search common logic
+@router.get('/connect')
+def checkConnection(db:Session=Depends(get_db)):
+    return{"status":"Connected"}
+
+
+
+def searchUser(id):
+    for index,data in enumerate(usersData):
+        if(data['id'] == id):
+            return index
+# load the data from server
+@router.get('/users/loadusers')
+def welcomeUser(db:Session=Depends(get_db)):
+    posts=db.query(models.Student).all()
+    return posts
+
+# search the data from server
+@router.get("/users/finduser/{name}")
+def findUser(name,db:Session=Depends(get_db)):
+    post= db.query(models.Student).filter(models.Student.uname==name ).first()
+    return {'data':post}
+
+
+# add the data from server
+@router.post('/users/adduser')
+def adduser(payload: userschema.UsersCreate,db:Session=Depends(get_db)):
+
+    userdata= models.Student(**payload.dict())
+    print (userdata)
+    db.add(userdata)
+    db.commit()
+   
+    return userdata
+    
+
+
+
+# remove the data from server
+@router.delete("/users/deleteuser/{name}")
+def deleteUser(name:str,db:Session=Depends(get_db)):
+     post= db.query(models.Student).filter(models.Student.uname==name )
+     print (post)
+     if post.first() == None:
+         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching name')
+     post.delete(synchronize_session=False)
+     db.commit()
+     return {'message':'user deleted'}
+
+         
+    
+
+# update the data from server
+@router.put("/users/updateuser/{id}")
+def updateUser(id:int,payload: userschema.Users):
+    serachResult= searchUser(id)
+    if serachResult== None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail='OOPS,.... user not found with matching ID')
+    
+    myuser=payload.model_dump()
+    myuser['id']=id
+    usersData[serachResult]=myuser
+
+    return{"result":'user updated'}
+
+
