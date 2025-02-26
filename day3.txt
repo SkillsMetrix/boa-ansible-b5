@@ -1,1 +1,32 @@
-https://github.com/SkillsMetrix/boa-ansible-b3/blob/main/app9-authJwt.zip
+{
+    "employee":
+    [
+    {
+        "empid":101,
+        "empname":"raman",
+        "department":"Finance"
+    },
+    {
+        "empid":102,
+        "empname":"samiran",
+        "department":"HR"
+    }
+    ]
+}
+
+------
+
+
+
+import json
+
+# open json file
+
+filedata=open("userdata.json",)
+
+data= json.load(filedata)
+
+for i in data['employee']:
+    print(i)
+
+filedata.close()
