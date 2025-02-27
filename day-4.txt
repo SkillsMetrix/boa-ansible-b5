@@ -1,16 +1,57 @@
 
+- name: var demo
+  hosts: db
+  gather_facts: False
+  become: true
 
+  vars:
+    # string variables
+    username_firstname: 'amit sehgal'
+    # bolean
+    is_enabled: true
 
-    - name: Install Apache Server
-      apt:
-        name:
-          - apache2
-        update_cache: yes
-        state: latest
-    - name: Copy index page to the target
-      template: src=index.html dest=/var/www/html
-      register: copy_result
+    # list
+    fruits:
+      - apple
+      - oranges
+      - banana
     
-    - name: check the result
+    # dict var
+    fruits_prices:
+      apple: 50
+      banana: 30
+      oranges: 80
+    # nested var
+
+    fruits_basket:
+      - name: john
+        fruits:
+          - apple
+          - banana
+      - name: sam
+        fruits:
+          - oranges
+          - apple
+
+
+  
+  
+  tasks:
+    - name: Print String value
       debug:
-        var: copy_result
+        var: username_firstname
+    - name: Print boolean value
+      debug:
+        var: is_enabled
+    - name: Print list value
+      debug:
+        var: fruits
+    - name: Print dict value
+      debug:
+        var: fruits_prices
+
+    - name: Print specific value
+      debug:
+        var: fruits[1]
+      
+
