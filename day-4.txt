@@ -1,57 +1,22 @@
+- name: install apache only when condition is true
+  apt:
+    name: apache2
+    state: absent
+  when: install_apache_flag
 
-- name: var demo
-  hosts: db
-  gather_facts: False
-  become: true
+- name: combine multiple conditions
+  debug:
+    var: ansible_facts['kernel_version']
+  when:
+    - ansible_facts['os_family']=='Debian'
+    - ansible_facts['distribution_major_version']=='24'
 
-  vars:
-    # string variables
-    username_firstname: 'amit sehgal'
-    # bolean
-    is_enabled: true
+- name: install only found BOA in remote machine
+  command: cat /home/ubuntu/user-details.txt
+  register: content_of_file
 
-    # list
-    fruits:
-      - apple
-      - oranges
-      - banana
-    
-    # dict var
-    fruits_prices:
-      apple: 50
-      banana: 30
-      oranges: 80
-    # nested var
-
-    fruits_basket:
-      - name: john
-        fruits:
-          - apple
-          - banana
-      - name: sam
-        fruits:
-          - oranges
-          - apple
-
-
+- name: use the var to take decision
+  debug:
+    var: content_of_file.stdout
+  when: content_of_file.stdout.find('BOA') != -1
   
-  
-  tasks:
-    - name: Print String value
-      debug:
-        var: username_firstname
-    - name: Print boolean value
-      debug:
-        var: is_enabled
-    - name: Print list value
-      debug:
-        var: fruits
-    - name: Print dict value
-      debug:
-        var: fruits_prices
-
-    - name: Print specific value
-      debug:
-        var: fruits[1]
-      
-
