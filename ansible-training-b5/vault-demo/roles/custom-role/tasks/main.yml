@@ -1,0 +1,4 @@
+
+- name: show the sensitive data
+  debug:
+    var: my_sensitive_data

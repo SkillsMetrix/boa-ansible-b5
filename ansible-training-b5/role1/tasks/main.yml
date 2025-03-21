@@ -1,0 +1,18 @@
+
+- name: install apache and check status
+  apt:
+    name: apache2
+    state: present
+
+- name: start apache and enable service
+  service:
+    name: apache2
+    state: started
+
+- name: check apache status
+  command: systemctl status apache2
+  register: apache_status
+
+- name: print status
+  debug:
+    msg: "{{apache_status.stdout}}"

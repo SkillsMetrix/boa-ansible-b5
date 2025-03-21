@@ -1,0 +1,17 @@
+
+- name: copy the index file
+  template: src=files/index.html dest=/home/ubuntu
+  register: copy_result
+  ignore_errors: true
+  
+
+- name: print error value
+  debug:
+    var: copy_result
+
+- name: details fail
+  template: src=files/index.html dest=/home/ubuntu
+  failed_when:
+    - '"Could not find or access in copy_result.msg"'
+    - copy_result.failed == true
+  any_errors_fatal: true

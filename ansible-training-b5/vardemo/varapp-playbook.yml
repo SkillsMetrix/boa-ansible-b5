@@ -1,0 +1,66 @@
+
+- name: var demo
+  hosts: db
+  gather_facts: False
+  become: true
+
+  vars:
+    # string variables
+    username_firstname: 'amit sehgal'
+    # bolean
+    is_enabled: true
+
+    # list
+    fruits:
+      - apple
+      - oranges
+      - banana
+    
+    # dict var
+    fruits_prices:
+      apple: 50
+      banana: 30
+      oranges: 80
+    # nested var
+
+    fruits_basket:
+      - name: john
+        fruits:
+          - apple
+          - banana
+      - name: sam
+        fruits:
+          - oranges
+          - apple
+
+  vars_files:
+    - my-vars.yml
+  
+  
+  tasks:
+    - name: Print String value
+      debug:
+        var: username_firstname
+    - name: Print boolean value
+      debug:
+        var: is_enabled
+    - name: Print list value
+      debug:
+        var: fruits
+    - name: Print dict value
+      debug:
+        var: fruits_prices
+
+    - name: Print specific value
+      debug:
+        var: fruits[1]
+    - name: Print external value
+      debug:
+        var: user_name
+    - name: Print external value
+      debug:
+        var: email
+        
+  
+      
+

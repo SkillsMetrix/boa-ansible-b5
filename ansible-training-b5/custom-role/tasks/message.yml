@@ -1,0 +1,4 @@
+- name: read data from var file
+  copy:
+    content: "{{message}}"
+    dest: /var/www/html/index.html

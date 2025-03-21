@@ -1,0 +1,18 @@
+
+- hosts: web
+  become: true
+  gather_facts: False
+  tasks:
+    - name: Install Apache Server
+      apt:
+        name:
+          - apache2
+        update_cache: yes
+        state: latest
+    - name: Copy index page to the target
+      template: src=index.html dest=/var/www/html
+      register: copy_result
+    
+    - name: check the result
+      debug:
+        var: copy_result

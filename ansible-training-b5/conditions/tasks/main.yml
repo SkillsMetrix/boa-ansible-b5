@@ -1,0 +1,27 @@
+- name: install apache only when condition is true
+  apt:
+    name: apache2
+    state: absent
+  when: install_apache_flag
+
+- name: combine multiple conditions
+  debug:
+    var: ansible_facts['kernel_version']
+  when:
+    - ansible_facts['os_family']=='Debian'
+    - ansible_facts['distribution_major_version']=='24'
+
+- name: install only found BOA in remote machine
+  command: cat /home/ubuntu/user-details.txt
+  register: content_of_file
+
+- name: use the var to take decision
+  debug:
+    var: content_of_file.stdout
+  when: content_of_file.stdout.find('BOA') != -1
+
+- name: install apache
+  apt:
+    name: apache2
+    state: absent
+  
